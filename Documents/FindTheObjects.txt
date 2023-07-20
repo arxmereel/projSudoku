@@ -1,1 +1,10 @@
+Possible ideas for teh objects needed and thier responsibilities:
+Contributots: dillohills, arxmereel
 
+Case one:
+Val class for the input of numbers
+
+Row/Col/Area classes using Polymorphism that inherit from a Section class where each object has 9 Val objects, sharing them between others
+Board class which has 9 rows, 9 cols, 9 areas, and 81 Vals
+
+Front end GUI class and an overall game manager class

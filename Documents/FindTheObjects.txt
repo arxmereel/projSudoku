@@ -8,3 +8,11 @@ Row/Col/Area classes using Polymorphism that inherit from a Section class where 
 Board class which has 9 rows, 9 cols, 9 areas, and 81 Vals
 
 Front end GUI class and an overall game manager class
+
+Addendum:
+Possibly use area class instead of 9 vals inside each area; each area replaced by a 3x3 array
+Getters could easily get the sum and contents of each row/co, which could lead to more streamlined process.
+
+Possible downsides- could cause issues when generating fully working sudoku puzzle.
+
+May need polymorphism to expand the final "board" class to allow for "guesses" during gameplay.

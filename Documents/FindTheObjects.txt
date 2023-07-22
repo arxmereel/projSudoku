@@ -16,3 +16,27 @@ Getters could easily get the sum and contents of each row/co, which could lead t
 Possible downsides- could cause issues when generating fully working sudoku puzzle.
 
 May need polymorphism to expand the final "board" class to allow for "guesses" during gameplay.
+
+Pre-Sprint Final Addendum:
+
+Cell Class.
+-Replaces the Val class, Responsible for keeping track of the type and value of each cell.
+-Boolean to keep track of whether the current cell is locked (part of the question) or unlocked (able to be guessed by the player)
+-Int to keep tack of the Value of the cell.
+-Array/Stack to store User candidates
+
+Section Class.
+-Keeps track of 9 Cells at once. (Array or 2D array)
+-Can be Polymorphic to accound for the Row, Col, and Area types.
+-Callers and getters for all, easy checking if each is valid (only one of 1-9 each.)
+
+Board Class.
+-Will hold several section classes forming the board.
+-Inbuilt way to output the complete 9x9 board
+-MAYBE function to generate puzzles?
+
+Game Manager Class:
+-Initializes board, new game, all additional functionality such as addidng candidates and guesses to the board.
+
+GUI Class:
+-TBA by GUI team Members

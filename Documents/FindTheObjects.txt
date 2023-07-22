@@ -39,4 +39,7 @@ Game Manager Class:
 -Initializes board, new game, all additional functionality such as addidng candidates and guesses to the board.
 
 GUI Class:
--TBA by GUI team Members
+-Layout GUI, will be two gridpanes with the sudoku board on the left and the options on the right
+-Launch
+-Buttons for New game, select cell, 9 buttons for numbers to choose from (will also use listeners to listen for key press), note mode toggle, erase, undo
+-Menu for difficulty options, possible other options

@@ -119,4 +119,18 @@ public class Board {
         }
         return true;
     }
+
+    /**
+     * Prints the generated Sudoku grid to the console.
+     */
+    public String toString(){
+        String str = "";
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                str += getCell(i,j).getValue() + " ";
+            }
+            str += "\n";
+        }
+        return str;    
+    }
 }

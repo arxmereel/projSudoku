@@ -11,14 +11,12 @@ import java.util.Set;
 
 public class Section {
     protected Cell[] cells;
-    protected boolean complete;
 
     public Section(){
         this.cells = new Cell[9];
         for (int i = 0; i <9; i++) {
             this.cells[i] = new Cell();
         }
-        this.complete = false;
     }
 
     //For Indicies when the Section is used as a 3x3 Area, refer to Documents/Indicies MAP.png
@@ -48,5 +46,38 @@ public class Section {
                 }
         }
         return true;
+    }
+
+    // A Section can only be Complete if all cells are not zero and the section is Valid.
+    public boolean isComplete() {
+        Set<Integer> dupeDetect = new HashSet<>();
+        if(isValid()){
+            for (Cell cell : this.cells) {
+                if (cell.getValue() != 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    //Implemented for future implementation of hints.
+    public Set<Integer> missingVals(){
+        Set<Integer> missingIntegers = new HashSet<>();
+        Set<Integer> presentIntegers = new HashSet<>();
+
+        for (Cell cell : this.cells) {
+            if (cell.getValue() != 0) {
+                presentIntegers.add(cell.getValue());
+            }
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            if (!presentIntegers.contains(i)) {
+                missingIntegers.add(i);
+            }
+        }
+        return missingIntegers;
     }
 }

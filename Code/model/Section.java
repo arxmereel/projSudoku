@@ -19,6 +19,17 @@ public class Section {
         }
     }
 
+    //Use for
+    public Section(Cell[] cells){
+        this.cells = new Cell[9];
+        int index = 0;
+        
+        for (Cell cell : cells) {
+            this.cells[index] = new Cell(cell);
+            index++;
+        }
+    }
+
     //For Indicies when the Section is used as a 3x3 Area, refer to Documents/Indicies MAP.png
     //For Row form, 0-8 from left to right. For Col form, top to down.
     public Cell getCell(int index){

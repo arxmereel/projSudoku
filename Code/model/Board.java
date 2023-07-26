@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * Basic code for the Board Class for Sudoku.
+ * 
+ * @author maxtung
+ */
+
 public class Board {
     protected Cell[][] board;
 
@@ -18,9 +24,9 @@ public class Board {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 this.board[i][j] = new Cell(otherBoard.getCell(i,j));
+            }
         }
     }
-}
 
     public Cell getCell(int row, int col){
         return board[row][col];
@@ -49,7 +55,6 @@ public class Board {
     }
 
     //Use for checking move validity
-
     public Cell[] getSection(int row, int col) {
         int startRow = (row / 3) * 3;
         int startCol = (col / 3) * 3;
@@ -66,17 +71,52 @@ public class Board {
         return section;
     }
 
-    
+
     //USE when Checking WHOLE BOARD
     //Mapping for Cells is the same as a 3x3 Area, refer to Documents/Indicies MAP.png
     public Cell[] getSection(int section){
         if (section >= 0 && section < 9){
             Cell[] sectionCells = new Cell[9];
+            int index = 0;
 
+            int startRow = (section / 3) * 3;
+            int startCol = (section % 3) * 3;
 
+            for (int row = startRow; row < startRow + 3; row++) {
+                for (int col = startCol; col < startCol + 3; col++) {
+                    sectionCells[index++] = this.board[row][col];
+                }
+            }
 
+            return sectionCells;
         }else{
             throw new IllegalArgumentException("col index out of bounds");
         }
+    }
+
+    //SAME RUES AS SECTION
+    public boolean isValid() {
+        for (int i = 0; i < 9; i++) {
+            Section rowSection = new Section(getRow(i));
+            Section colSection = new Section(getCol(i));
+            Section secSection = new Section(getSection(i));
+            if (rowSection.isValid()== false || colSection.isValid()== false || secSection.isValid()== false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //SAME RULES AS SECTION
+    public boolean isComplete() {
+        for (int i = 0; i < 9; i++) {
+            Section rowSection = new Section(getRow(i));
+            Section colSection = new Section(getCol(i));
+            Section secSection = new Section(getSection(i));
+            if (rowSection.isComplete() == false || colSection.isComplete() == false || secSection.isComplete() == false) {
+                return false;
+            }
+        }
+        return true;
     }
 }

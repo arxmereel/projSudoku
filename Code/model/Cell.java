@@ -28,6 +28,14 @@ public class Cell {
         this.candidates = new HashSet<>();
     }
 
+    // Clone constructor
+    
+    public Cell(Cell otherCell) {
+        this.editable = otherCell.editable;
+        this.value = otherCell.value;
+        this.candidates = new HashSet<>(otherCell.candidates);
+    }
+
     public boolean isEditable() {
         return editable;
     }

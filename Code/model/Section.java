@@ -50,10 +50,9 @@ public class Section {
 
     // A Section can only be Complete if all cells are not zero and the section is Valid.
     public boolean isComplete() {
-        Set<Integer> dupeDetect = new HashSet<>();
         if(isValid()){
             for (Cell cell : this.cells) {
-                if (cell.getValue() != 0){
+                if (cell.getValue() == 0){
                     return false;
                 }
             }

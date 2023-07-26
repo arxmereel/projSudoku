@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Basic code for the Game Manager Class for Sudoku.
  * 
- * @author maxtung, chiu ?????
+ * @author maxtung, Chiu Yeh Chen
  */
 
 public class GameManager {
@@ -14,12 +14,14 @@ public class GameManager {
     private static final int SIZE = 9;
     private static final int BOX_SIZE = 3;
     private static final int EMPTY_CELL = 0;
-    private static final int CELL_TO_REMOVE = 40; // 50 = hard, 40 = normal
+    private static final int CELL_TO_REMOVE = 40; // 50 = hard, 40 = normal make it really small for testing
+    private int zeroCounter = 0;
     private Random random;
 
     public GameManager() {
         this.gameBoard = new Board();
         this.random = new Random();
+        zeroCounter = CELL_TO_REMOVE;
     }
 
     // Create a dupe board, try the move, if valid, make edit to actual board and
@@ -29,15 +31,33 @@ public class GameManager {
     // Possbily generate whole puzzle and keep a backup board to directly check
     // answers in place???
 
-    public boolean makeMove(int row, int col, int val) {
-        Board tempBoard = new Board(this.gameBoard);
+    // public boolean makeMove(int row, int col, int val) {
+    //     Board tempBoard = new Board(this.gameBoard);
 
-        Section rowSection = new Section(tempBoard.getRow(row));
-        Section colSection = new Section(tempBoard.getCol(col));
-        Section secSection = new Section(tempBoard.getSection(row, col));
+    //     Section rowSection = new Section(tempBoard.getRow(row));
+    //     Section colSection = new Section(tempBoard.getCol(col));
+    //     Section secSection = new Section(tempBoard.getSection(row, col));
 
-        if (rowSection.isValid() && colSection.isValid() && secSection.isValid()) {
+    //     if (rowSection.isValid() && colSection.isValid() && secSection.isValid()) {
+    //         gameBoard.getCell(row, col).setValue(val);
+    //     }
+    //     return false;
+    // }
+
+    /**
+     * fill in the cell used given value.
+     * 
+     * @param row The row index of the cell .
+     * @param col The column index of the cell.
+     * @param val the 1-9 number user want to input.
+     * @return true if successful(right answer), false otherwise.
+     */
+    public boolean makeMove(int row, int col, int val){
+        if (val < 1 || val > 9) throw new IllegalArgumentException("val index out of range");
+        if(answerBoard.getCell(row, col).getValue() == val){
             gameBoard.getCell(row, col).setValue(val);
+            zeroCounter --;
+            return true;
         }
         return false;
     }
@@ -64,17 +84,32 @@ public class GameManager {
         gameBoard.getCell(row, col).getCandidates();
     }
 
+    /* for debug */
+    public void printAnswer(){
+        System.out.println("answerBoard:");
+        System.out.println(answerBoard);
+    }
+
+    /* for debug */
+    public void printGameBoard(){
+        System.out.println("gameBoard:");
+        System.out.println(gameBoard);
+    }
+
+    public boolean isGameOver(){
+        if (zeroCounter == 0) return true; 
+        return false;  
+    }
+
     /**
      * Generates a Sudoku puzzle.
      */
     public void generateSudoku() {
-        // fillDiagonalBoxes();
         fillFirstRoll();
         solveSudoku(0, 0, gameBoard);
         answerBoard = new Board(gameBoard);
-        System.out.println(gameBoard);
-        removeNumbers(gameBoard);
-        System.out.println(gameBoard);
+        removeNumbers(gameBoard);   
+        
     }
 
     /**
@@ -89,7 +124,6 @@ public class GameManager {
 
         for (int i = 0; i < 9; i++) {
             gameBoard.getCell(0, i).setValue(numbers[i]);
-            // grid[i][0] = numbers[index++];
         }
     }
 

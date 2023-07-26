@@ -29,7 +29,7 @@ public class Cell {
     }
 
     // Clone constructor
-    
+
     public Cell(Cell otherCell) {
         this.editable = otherCell.editable;
         this.value = otherCell.value;
@@ -49,12 +49,12 @@ public class Cell {
     }
 
     //Setter. Will return value if cell is editable, -1 if not.
-    public int setValue(int val){
+    public boolean setValue(int val){
         if (editable){
             this.value = val;
-            return val;
+            return true;
         } else{
-            return -1;
+            return false;
         }
     }
 
@@ -63,7 +63,7 @@ public class Cell {
     }
 
     //Adds More candidates. PSA: still takes regular aray as Param
-    public void setCandidates(int[] newCandidates) {
+    public void addCandidates(int[] newCandidates) {
         for (int candidate : newCandidates) {
             this.candidates.add(candidate);
         }

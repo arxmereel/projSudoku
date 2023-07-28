@@ -14,7 +14,8 @@ public class GameManager {
     private static final int SIZE = 9;
     private static final int BOX_SIZE = 3;
     private static final int EMPTY_CELL = 0;
-    private static final int CELL_TO_REMOVE = 40; // 50 = hard, 40 = normal make it really small for testing
+    private static int CELL_TO_REMOVE = 40; 
+    // 50 = hard, 40 = normal, 30 = normal, 1 for test
     private int zeroCounter = 0;
     private Random random;
 
@@ -62,6 +63,34 @@ public class GameManager {
         return false;
     }
 
+    /** check is a cell empty.
+     *  true if the cell is empty, false otherwise.
+     */
+    public boolean isCellEmpty(int row, int col){
+        if (gameBoard.getCell(row, col).getValue() == EMPTY_CELL)
+            return true;
+        return false;
+    }
+
+    /** change difficulty, basically change have many cells remove from
+     *  the game board.
+     *  Need to REGENERATE sudoku after this function call.
+     * 
+     *  @param difficulty number from 1-55, can not be greater 55
+     *  otherwise it will be take too long. Default at 40.
+     */
+    public void setDifficulty(int difficulty) {
+        if (difficulty >= 55){
+            CELL_TO_REMOVE = 55;
+        }
+        else if (difficulty <= 0){
+            CELL_TO_REMOVE = 0;
+        }else{
+            CELL_TO_REMOVE = difficulty;
+        }
+        zeroCounter = CELL_TO_REMOVE;
+    }
+    
     public void addCandidates(int row, int col, int[] cands) {
         gameBoard.getCell(row, col).addCandidates(cands);
     }

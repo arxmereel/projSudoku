@@ -1,6 +1,8 @@
-package model;
+package view;
 
 import java.util.Scanner;
+
+import model.GameManager;
 
 public class consoleGame {
     public static void main(String[] args) {

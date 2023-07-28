@@ -84,6 +84,13 @@ public class GameManager {
         gameBoard.getCell(row, col).getCandidates();
     }
 
+    public Board getGameBoard() {
+		return gameBoard;
+	}
+    public Board getanswerBoard() {
+		return answerBoard;
+	}
+
     /* for debug */
     public void printAnswer(){
         System.out.println("answerBoard:");
@@ -109,6 +116,19 @@ public class GameManager {
         solveSudoku(0, 0, gameBoard);
         answerBoard = new Board(gameBoard);
         removeNumbers(gameBoard);   
+        
+    }
+
+    /**
+     * Generates a hard coded Sudoku puzzle.
+     */
+    public void generateSudokuForTesting() {
+    	int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    	for (int i = 0; i < 9; i++) {
+            getGameBoard().getCell(0, i).setValue(numbers[i]);}
+        solveSudoku(0, 0, getGameBoard());
+        answerBoard = new Board(getGameBoard());
+        removeNumbers(getGameBoard());   
         
     }
 

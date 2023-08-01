@@ -75,8 +75,8 @@ public class GameManager {
     }
 
     // for GUI Parese
-    public void getCellVal(int row, int col) {
-        gameBoard.getCell(row, col).getValue();
+    public int getCellVal(int row, int col) {
+        return gameBoard.getCell(row, col).getValue();
     }
 
     // for GUI Parese

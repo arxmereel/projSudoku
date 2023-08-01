@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.GameManager;
 
 public class SudokuGUI extends Application {
 	
@@ -33,6 +34,8 @@ public class SudokuGUI extends Application {
 	
 	private Label notesLabel[][][][]; // 9x9 3x3 of individual labels for note taking for candidates
 	private Label cellLabel[][]; // 9x9 of cell labels for correct answer
+	private Label mistakesLabel; // displays current number of mistakes made
+	private Label infoLabel; // explains how to play the game and displays when the game is won
 	
 	private Button[][] numberButtons; // 3x3 of buttons to press to input
 	private Button newGame; // begins a new game
@@ -40,8 +43,13 @@ public class SudokuGUI extends Application {
 	
 	private int col; // x value of current cell
 	private int row; // y value of current cell
+	private int mistakes; // current number of mistakes the player has made
 	
 	private boolean noteMode; // boolean to determine if note taking mode is on or off
+	
+	private boolean cellTaken[][]; // little bit of spaghetti code to determine if the cell is empty, uneditable, or incorrect
+	
+	private GameManager game;
 	
 	public static void main(String args[]) {
 		launch();
@@ -76,6 +84,9 @@ public class SudokuGUI extends Application {
 		notesLabel = new Label[9][9][3][3];
 		cellLabel = new Label[9][9];
 		
+		mistakesLabel = new Label();
+		infoLabel = new Label();
+		
 		numberButtons = new Button[3][3];
 		newGame = new Button("New Game");
 		modeToggle = new Button("Notes: OFF");
@@ -85,6 +96,8 @@ public class SudokuGUI extends Application {
 		mainPane.add(buttonPane, 1, 0);
 		buttonPane.add(buttonNumbersPane, 0, 0);
 		buttonPane.add(buttonOptionsPane, 0, 1);
+		buttonPane.add(mistakesLabel, 0, 2);
+		buttonPane.add(infoLabel, 0, 3);
 		buttonOptionsPane.add(newGame, 0, 0);
 		buttonOptionsPane.add(modeToggle, 1, 0);
 		
@@ -165,6 +178,9 @@ public class SudokuGUI extends Application {
 		modeToggle.setMinHeight(50);
 		modeToggle.setMaxWidth(152);
 		modeToggle.setMinWidth(152);
+		
+		mistakesLabel.setStyle("-fx-padding: 10px; -fx-font: normal 15px 'serif';");
+		infoLabel.setStyle("-fx-padding: 10px; -fx-font: normal 15px 'serif';");
 	}
 	
 	/**
@@ -178,31 +194,31 @@ public class SudokuGUI extends Application {
 			toggleMode();
 		});
 		numberButtons[0][0].setOnAction(e -> {
-			cellLabel[row][col].setText("1");
+			makeMove(1);
 		});
 		numberButtons[0][1].setOnAction(e -> {
-			cellLabel[row][col].setText("2");
+			makeMove(2);
 		});
 		numberButtons[0][2].setOnAction(e -> {
-			cellLabel[row][col].setText("3");
+			makeMove(3);
 		});
 		numberButtons[1][0].setOnAction(e -> {
-			cellLabel[row][col].setText("4");
+			makeMove(4);
 		});
 		numberButtons[1][1].setOnAction(e -> {
-			cellLabel[row][col].setText("5");
+			makeMove(5);
 		});
 		numberButtons[1][2].setOnAction(e -> {
-			cellLabel[row][col].setText("6");
+			makeMove(6);
 		});
 		numberButtons[2][0].setOnAction(e -> {
-			cellLabel[row][col].setText("7");
+			makeMove(7);
 		});
 		numberButtons[2][1].setOnAction(e -> {
-			cellLabel[row][col].setText("8");
+			makeMove(8);
 		});
 		numberButtons[2][2].setOnAction(e -> {
-			cellLabel[row][col].setText("9");
+			makeMove(9);
 		});
 	}
 	
@@ -222,24 +238,24 @@ public class SudokuGUI extends Application {
 				moveCurr("down");
 			} else if (e.getCode() == KeyCode.ALT) {
 				toggleMode();
-			} else if (e.getCode() == KeyCode.DIGIT1) {
-				cellLabel[row][col].setText("1");
-			} else if (e.getCode() == KeyCode.DIGIT2) {
-				cellLabel[row][col].setText("2");
-			} else if (e.getCode() == KeyCode.DIGIT3) {
-				cellLabel[row][col].setText("3");
-			} else if (e.getCode() == KeyCode.DIGIT4) {
-				cellLabel[row][col].setText("4");
-			} else if (e.getCode() == KeyCode.DIGIT5) {
-				cellLabel[row][col].setText("5");
-			} else if (e.getCode() == KeyCode.DIGIT6) {
-				cellLabel[row][col].setText("6");
-			} else if (e.getCode() == KeyCode.DIGIT7) {
-				cellLabel[row][col].setText("7");
-			} else if (e.getCode() == KeyCode.DIGIT8) {
-				cellLabel[row][col].setText("8");
-			} else if (e.getCode() == KeyCode.DIGIT9) {
-				cellLabel[row][col].setText("9");
+			} else if (e.getCode() == KeyCode.DIGIT1 || e.getCode() == KeyCode.NUMPAD1) {
+				makeMove(1);
+			} else if (e.getCode() == KeyCode.DIGIT2 || e.getCode() == KeyCode.NUMPAD2) {
+				makeMove(2);
+			} else if (e.getCode() == KeyCode.DIGIT3 || e.getCode() == KeyCode.NUMPAD3) {
+				makeMove(3);
+			} else if (e.getCode() == KeyCode.DIGIT4 || e.getCode() == KeyCode.NUMPAD4) {
+				makeMove(4);
+			} else if (e.getCode() == KeyCode.DIGIT5 || e.getCode() == KeyCode.NUMPAD5) {
+				makeMove(5);
+			} else if (e.getCode() == KeyCode.DIGIT6 || e.getCode() == KeyCode.NUMPAD6) {
+				makeMove(6);
+			} else if (e.getCode() == KeyCode.DIGIT7 || e.getCode() == KeyCode.NUMPAD7) {
+				makeMove(7);
+			} else if (e.getCode() == KeyCode.DIGIT8 || e.getCode() == KeyCode.NUMPAD8) {
+				makeMove(8);
+			} else if (e.getCode() == KeyCode.DIGIT9 || e.getCode() == KeyCode.NUMPAD9) {
+				makeMove(9);
 			}
 		});
 	}
@@ -259,15 +275,33 @@ public class SudokuGUI extends Application {
 		}
 		
 		// initialize variables and toggle button, or reset them
+		infoLabel.setText("Navigate the board with WASD or arrow keys, use buttons or \n number keys to input answers.");
 		row = 4;
 		col = 4;
+		mistakes = 0;
+		mistakesLabel.setText("Mistakes: " + mistakes);
 		modeToggle.setStyle("-fx-background-color: white; -fx-text-fill: black;"
 				+ "-fx-font-size: 20");
 		modeToggle.setText("Notes: OFF");
 		noteMode = false;
-
-		addColor();
+		cellTaken = new boolean[9][9];
+		game = new GameManager();
 		
+		game.generateSudoku();
+		game.printGameBoard();
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (game.getCellVal(i, j) != 0) {
+					cellLabel[i][j].setText(String.valueOf(game.getCellVal(i, j)));
+					cellTaken[i][j] = true;
+				} else {
+					cellTaken[i][j] = false;
+				}
+			}
+		}
+		
+		changeColor(true);
+
 	}
 	
 	/**
@@ -298,141 +332,91 @@ public class SudokuGUI extends Application {
 		if ((col != 0 && direction.equals("left")) || (col != 8 && direction.equals("right")) ||
 			(row != 0 && direction.equals("up")) || (row != 8 && direction.equals("down"))) {
 			
-			removeColor();
+			changeColor(false);
 			if (direction.equals("left")) col -= 1;
 			else if (direction.equals("right")) col += 1;
 			else if (direction.equals("up")) row -= 1;
 			else if (direction.equals("down")) row += 1;
-			addColor();
+			changeColor(true);
 			System.out.println("X: " + col + " Y: " + row);
 		}
 	}
 	
-	/**
-	 * Removes the color from the current cell's row, column, and section.
-	 */
-	private void removeColor() {
+	private void makeMove(int input) {
+		if (!cellTaken[row][col]) {
+			if (game.makeMove(row, col, input)) {
+				cellLabel[row][col].setText(String.valueOf(input));
+				cellTaken[row][col] = true;
+				cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+			} else {
+				cellLabel[row][col].setText(String.valueOf(input));
+				mistakes++;
+				mistakesLabel.setText("Mistakes: " + mistakes);
+				cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+			}
+		}
 		
-		// row and column
-				for (int i = 0; i < 9; i++) {
-					cellLabel[i][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
-							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-					cellLabel[row][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
-							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-					
-					// notesLabels as well
-					for (int m = 0; m < 3; m++) {
-						for (int n = 0; n < 3; n++) {
-							notesLabel[i][col][m][n].setStyle("-fx-background-color: white;"
-									+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
-							notesLabel[row][i][m][n].setStyle("-fx-background-color: white;"
-									+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
-						}
-					}
-				}
-				
-				// determine which section to color
-				int startX = 0, endX = 0, startY = 0, endY = 0;
-				if (col < 3 && row < 3) {
-					startX = 0;
-					endX = 3;
-					startY = 0;
-					endY = 3;
-				} else if ((col >= 3 && col < 6) && (row < 3)) {
-					startX = 3;
-					endX = 6;
-					startY = 0;
-					endY = 3;
-				} else if ((col >= 6) && (row < 3)) {
-					startX = 6;
-					endX = 9;
-					startY = 0;
-					endY = 3;
-				} else if ((col < 3) && (row >= 3 && row < 6)) {
-					startX = 0;
-					endX = 3;
-					startY = 3;
-					endY = 6;
-				} else if ((col >= 3 && col < 6) && (row >= 3 && row < 6)) {
-					startX = 3;
-					endX = 6;
-					startY = 3;
-					endY = 6;
-				} else if ((col >= 6) && (row >= 3 && row < 6)) {
-					startX = 6;
-					endX = 9;
-					startY = 3;
-					endY = 6;
-				} else if ((col < 3) && (row >= 6)) {
-					startX = 0;
-					endX = 3;
-					startY = 6;
-					endY = 9;
-				} else if ((col >= 3 && col < 6) && (row >= 6)) {
-					startX = 3;
-					endX = 6;
-					startY = 6;
-					endY = 9;
-				} else if ((col >= 6) && (row >= 6)) {
-					startX = 6;
-					endX = 9;
-					startY = 6;
-					endY = 9;
-				}
-				
-				// color that section
-				for (int i = startX; i < endX; i++) {
-					for (int j = startY; j < endY; j++) {
-						cellLabel[j][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
-								+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-						cellLabel[j][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
-								+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-						
-						// notesLabels as well
-						for (int m = 0; m < 3; m++) {
-							for (int n = 0; n < 3; n++) {
-								notesLabel[i][j][m][n].setStyle("-fx-background-color: white; -fx-border-color: lightgray;"
-										+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
-							}
-						}
-					}
-				}
-				
-				// current cell
-				cellLabel[row][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif'; "
-							+ "-fx-padding: 5px;");
-				for (int m = 0; m < 3; m++) {
-					for (int n = 0; n < 3; n++) {
-						notesLabel[row][col][m][n].setStyle("-fx-background-color: white;"
-								+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
-					}
-				}
+		if (game.isGameOver()) {
+			infoLabel.setText("You won!");
+		}
 	}
 	
 	/**
-	 * Adds color to the current cell's row, column, and section.
-	 * Code is nearly identical to removeColor(), it just adds color instead.
+	 * Changes the color of the current cell's row, column, and section.
 	 */
-	private void addColor() {
+	private void changeColor(boolean add) {
 		
 		// row and column
 		for (int i = 0; i < 9; i++) {
-			cellLabel[i][col].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
-					+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-			cellLabel[row][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
-					+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+			if (add) {
+				if (!cellTaken[i][col]) {
+					cellLabel[i][col].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+				} else {
+					cellLabel[i][col].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+				}
+				
+				if (!cellTaken[row][i]) {
+					cellLabel[row][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+				} else {
+					cellLabel[row][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+				}
+				
+				
+			} else {
+				if (!cellTaken[i][col]) {
+					cellLabel[i][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+				} else {
+					cellLabel[i][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+				}
+				
+				if (!cellTaken[row][i]) {
+					cellLabel[row][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+				} else {
+					cellLabel[row][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+							+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+				}
+			}
 			
 			// notesLabels as well
 			for (int m = 0; m < 3; m++) {
 				for (int n = 0; n < 3; n++) {
-					notesLabel[i][col][m][n].setStyle("-fx-background-color: #e3ecf3;"
+					notesLabel[i][col][m][n].setStyle("-fx-background-color: white;"
 							+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
-					notesLabel[row][i][m][n].setStyle("-fx-background-color: #e3ecf3;"
+					notesLabel[row][i][m][n].setStyle("-fx-background-color: white;"
 							+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
 				}
 			}
 		}
-		
+				
 		// determine which section to color
 		int startX = 0, endX = 0, startY = 0, endY = 0;
 		if (col < 3 && row < 3) {
@@ -485,15 +469,28 @@ public class SudokuGUI extends Application {
 		// color that section
 		for (int i = startX; i < endX; i++) {
 			for (int j = startY; j < endY; j++) {
-				cellLabel[j][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
-						+ "-fx-padding: 5px; -fx-border-color: lightgray;");
-				cellLabel[j][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
-						+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+				if (add) {
+					if (!cellTaken[j][i]) {
+						cellLabel[j][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+								+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+					} else {
+						cellLabel[j][i].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
+								+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+					}
+				} else {
+					if (!cellTaken[j][i]) {
+						cellLabel[j][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+								+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+					} else {
+						cellLabel[j][i].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif';"
+								+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+					}
+				}
 				
 				// notesLabels as well
 				for (int m = 0; m < 3; m++) {
 					for (int n = 0; n < 3; n++) {
-						notesLabel[i][j][m][n].setStyle("-fx-background-color: #e3ecf3;"
+						notesLabel[i][j][m][n].setStyle("-fx-background-color: white; -fx-border-color: lightgray;"
 								+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
 					}
 				}
@@ -501,13 +498,29 @@ public class SudokuGUI extends Application {
 		}
 		
 		// current cell
-		cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
-					+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+		if (add) {
+			if (!cellTaken[row][col]) {
+				cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");
+			} else {
+				cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px; -fx-border-color: lightgray;");
+			}
+		} else {
+			if (!cellTaken[row][col]) {
+				cellLabel[row][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px; -fx-text-fill: red;");
+			} else {
+				cellLabel[row][col].setStyle("-fx-background-color: white; -fx-font: normal bold 30px 'serif'; "
+						+ "-fx-padding: 5px;");
+			}
+			
+		}
 		for (int m = 0; m < 3; m++) {
 			for (int n = 0; n < 3; n++) {
-				notesLabel[row][col][m][n].setStyle("-fx-background-color: #e3ecf3;"
+				notesLabel[row][col][m][n].setStyle("-fx-background-color: white;"
 						+ "-fx-font: normal 10px 'serif'; -fx-padding: 5px;");
 			}
-		}	
+		}
 	}
 }

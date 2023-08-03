@@ -403,6 +403,7 @@ public class SudokuGUI extends Application {
 		// row and column
 		for (int i = 0; i < 9; i++) {
 			if (add) {
+				// checks if cell is empty/wrong (0), taken/uneditable (1), or filled with notes (2)
 				if (cellStatus[i][col] == 0) {
 					cellLabel[i][col].setStyle("-fx-background-color: #e3ecf3; -fx-font: normal bold 30px 'serif';"
 							+ "-fx-padding: 5px; -fx-border-color: lightgray; -fx-text-fill: red;");

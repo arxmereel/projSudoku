@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Basic code for the Game Manager Class for Sudoku.
@@ -62,8 +63,8 @@ public class GameManager {
         return false;
     }
 
-    public void addCandidates(int row, int col, int[] cands) {
-        gameBoard.getCell(row, col).addCandidates(cands);
+    public void addCandidate(int row, int col, int cand) {
+        gameBoard.getCell(row, col).addCandidate(cand);
     }
 
     public void clearCandidates(int row, int col) {
@@ -75,21 +76,14 @@ public class GameManager {
     }
 
     // for GUI Parese
-    public void getCellVal(int row, int col) {
-        gameBoard.getCell(row, col).getValue();
+    public int getCellVal(int row, int col) {
+        return gameBoard.getCell(row, col).getValue();
     }
 
     // for GUI Parese
-    public void getCellCands(int row, int col) {
-        gameBoard.getCell(row, col).getCandidates();
+    public Set<Integer> getCellCands(int row, int col) {
+        return gameBoard.getCell(row, col).getCandidates();
     }
-
-    public Board getGameBoard() {
-		return gameBoard;
-	}
-    public Board getanswerBoard() {
-		return answerBoard;
-	}
 
     /* for debug */
     public void printAnswer(){
@@ -116,19 +110,6 @@ public class GameManager {
         solveSudoku(0, 0, gameBoard);
         answerBoard = new Board(gameBoard);
         removeNumbers(gameBoard);   
-        
-    }
-
-    /**
-     * Generates a hard coded Sudoku puzzle.
-     */
-    public void generateSudokuForTesting() {
-    	int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    	for (int i = 0; i < 9; i++) {
-            getGameBoard().getCell(0, i).setValue(numbers[i]);}
-        solveSudoku(0, 0, getGameBoard());
-        answerBoard = new Board(getGameBoard());
-        removeNumbers(getGameBoard());   
         
     }
 

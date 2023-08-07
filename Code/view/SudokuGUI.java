@@ -7,6 +7,7 @@
  * WASD are used to navigate the board. Arrow keys can also be used, but CTRL must be held down.
  * The current row, column, and section is highlighted in a light blue,
  * and the current cell is highlighted in a slightly darker blue.
+ * Press ALT to toggle note taking mode.
  */
 
 package view;
@@ -68,6 +69,9 @@ public class SudokuGUI extends Application {
 		stage.show();
 	}
 	
+	/**
+	 * Makes the GUI look pretty and initializes all the GUI objects.
+	 */
 	private void layoutGUI() {
 		
 		mainPane = new GridPane();
@@ -259,7 +263,7 @@ public class SudokuGUI extends Application {
 	}
 	
 	/**
-	 * Begins a new game. Unfinished.
+	 * Begins a new game. Resets core game variables and resets the board.
 	 */
 	private void newGame() {
 		
@@ -287,7 +291,7 @@ public class SudokuGUI extends Application {
 		game = new GameManager();
 		
 		game.generateSudoku();
-		game.printGameBoard();
+//		game.printGameBoard();
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (game.getCellVal(i, j) != 0) {
@@ -337,7 +341,7 @@ public class SudokuGUI extends Application {
 			else if (direction.equals("up")) row -= 1;
 			else if (direction.equals("down")) row += 1;
 			changeColor(true);
-			System.out.println("X: " + col + " Y: " + row);
+//			System.out.println("X: " + col + " Y: " + row);
 		}
 	}
 	
@@ -353,6 +357,7 @@ public class SudokuGUI extends Application {
 				cellLabel[row][col].setStyle("-fx-background-color: #c0dffb; -fx-font: normal bold 30px 'serif'; "
 						+ "-fx-padding: 5px; -fx-border-color: lightgray;");
 			} else {
+				game.clearCandidates(row, col);
 				cellLabel[row][col].setText(String.valueOf(input));
 				mistakes++;
 				cellStatus[row][col] = 0;

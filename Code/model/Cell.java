@@ -63,10 +63,8 @@ public class Cell {
     }
 
     //Adds More candidates. PSA: still takes regular aray as Param
-    public void addCandidates(int[] newCandidates) {
-        for (int candidate : newCandidates) {
-            this.candidates.add(candidate);
-        }
+    public void addCandidate(int newCandidate) {
+        this.candidates.add(newCandidate);
     }
 
     public void clearCandidates(){

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Basic code for the Game Manager Class for Sudoku.
@@ -14,8 +15,7 @@ public class GameManager {
     private static final int SIZE = 9;
     private static final int BOX_SIZE = 3;
     private static final int EMPTY_CELL = 0;
-    private static int CELL_TO_REMOVE = 40; 
-    // 50 = hard, 40 = normal, 30 = normal, 1 for test
+    private static final int CELL_TO_REMOVE = 40; // 50 = hard, 40 = normal make it really small for testing
     private int zeroCounter = 0;
     private Random random;
 
@@ -63,36 +63,8 @@ public class GameManager {
         return false;
     }
 
-    /** check is a cell empty.
-     *  true if the cell is empty, false otherwise.
-     */
-    public boolean isCellEmpty(int row, int col){
-        if (gameBoard.getCell(row, col).getValue() == EMPTY_CELL)
-            return true;
-        return false;
-    }
-
-    /** change difficulty, basically change have many cells remove from
-     *  the game board.
-     *  Need to REGENERATE sudoku after this function call.
-     * 
-     *  @param difficulty number from 1-55, can not be greater 55
-     *  otherwise it will be take too long. Default at 40.
-     */
-    public void setDifficulty(int difficulty) {
-        if (difficulty >= 55){
-            CELL_TO_REMOVE = 55;
-        }
-        else if (difficulty <= 0){
-            CELL_TO_REMOVE = 0;
-        }else{
-            CELL_TO_REMOVE = difficulty;
-        }
-        zeroCounter = CELL_TO_REMOVE;
-    }
-    
-    public void addCandidates(int row, int col, int[] cands) {
-        gameBoard.getCell(row, col).addCandidates(cands);
+    public void addCandidate(int row, int col, int cand) {
+        gameBoard.getCell(row, col).addCandidate(cand);
     }
 
     public void clearCandidates(int row, int col) {
@@ -104,21 +76,14 @@ public class GameManager {
     }
 
     // for GUI Parese
-    public void getCellVal(int row, int col) {
-        gameBoard.getCell(row, col).getValue();
+    public int getCellVal(int row, int col) {
+        return gameBoard.getCell(row, col).getValue();
     }
 
     // for GUI Parese
-    public void getCellCands(int row, int col) {
-        gameBoard.getCell(row, col).getCandidates();
+    public Set<Integer> getCellCands(int row, int col) {
+        return gameBoard.getCell(row, col).getCandidates();
     }
-
-    public Board getGameBoard() {
-		return gameBoard;
-	}
-    public Board getanswerBoard() {
-		return answerBoard;
-	}
 
     /* for debug */
     public void printAnswer(){
@@ -145,19 +110,6 @@ public class GameManager {
         solveSudoku(0, 0, gameBoard);
         answerBoard = new Board(gameBoard);
         removeNumbers(gameBoard);   
-        
-    }
-
-    /**
-     * Generates a hard coded Sudoku puzzle.
-     */
-    public void generateSudokuForTesting() {
-    	int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    	for (int i = 0; i < 9; i++) {
-            getGameBoard().getCell(0, i).setValue(numbers[i]);}
-        solveSudoku(0, 0, getGameBoard());
-        answerBoard = new Board(getGameBoard());
-        removeNumbers(getGameBoard());   
         
     }
 

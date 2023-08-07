@@ -19,6 +19,7 @@ public class GameManager {
     private int zeroCounter = 0;
     private Random random;
 
+    // constructor for GM.
     public GameManager() {
         this.gameBoard = new Board();
         this.random = new Random();
@@ -85,18 +86,23 @@ public class GameManager {
         return gameBoard.getCell(row, col).getCandidates();
     }
 
-    /* for debug */
+    /*
+    Print the answer board for debug. */
     public void printAnswer(){
         System.out.println("answerBoard:");
         System.out.println(answerBoard);
     }
 
-    /* for debug */
+    /* 
+    print the game Board for debug. */
     public void printGameBoard(){
         System.out.println("gameBoard:");
         System.out.println(gameBoard);
     }
 
+    /**
+     * check if game is over.
+     */
     public boolean isGameOver(){
         if (zeroCounter == 0) return true; 
         return false;  
@@ -109,8 +115,7 @@ public class GameManager {
         fillFirstRoll();
         solveSudoku(0, 0, gameBoard);
         answerBoard = new Board(gameBoard);
-        removeNumbers(gameBoard);   
-        
+        removeNumbers(gameBoard);      
     }
 
     /**

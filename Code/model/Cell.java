@@ -14,21 +14,30 @@ public class Cell {
     protected int value;
     protected Set<Integer> candidates;
 
-    //DEFAULTS Cell value to ZERO. Use for solvable Cells
+    /**
+     * Base Constructor. Defaults to an editable cell with value Zero.
+     */
     public Cell() {
         this.editable = true;
         this.value = 0;
         this.candidates = new HashSet<>();
     }
 
-    //Fixed Value. Use to form Puzzle Problem
+    /**
+     *  Fixed value constructor to form uzzle problem
+     * @param val   cell value
+     */
     public Cell(int val) {
         this.editable = false;
         this.value = val;
         this.candidates = new HashSet<>();
     }
 
-    // Clone constructor
+    /**
+     * Clone Constructor
+     * 
+     * @param otherCell cell to clone
+     */
 
     public Cell(Cell otherCell) {
         this.editable = otherCell.editable;
@@ -36,19 +45,36 @@ public class Cell {
         this.candidates = new HashSet<>(otherCell.candidates);
     }
 
+    /**
+     * Returns if the cell is Editable
+     * 
+     * @return  if the cell is editable
+     */
     public boolean isEditable() {
         return editable;
     }
 
+    /**
+     * Sets a cell's editability status
+     * @param editable  cell's new editable value
+     */
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
 
+    /** Returns the Value of the cell
+     * 
+     * @return  cell value
+     */
     public int getValue() {
         return value;
     }
 
-    //Setter. Will return value if cell is editable, -1 if not.
+    /** Basic Value setter.
+     * 
+     * @param val   new value
+     * @return  value if cell is editable, -1 if not.
+     */
     public boolean setValue(int val){
         if (editable){
             this.value = val;
@@ -58,11 +84,18 @@ public class Cell {
         }
     }
 
+    /** Returns the candidates for a given cell.
+     * 
+     * @return set of integer candidates.
+     */
     public Set<Integer> getCandidates() {
         return candidates;
     }
 
-    //Adds More candidates. PSA: still takes regular aray as Param
+    /** Adds a single new candidate to the set of candidates.
+     * 
+     * @param newCandidate
+     */
     public void addCandidate(int newCandidate) {
         this.candidates.add(newCandidate);
     }

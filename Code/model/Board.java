@@ -9,6 +9,10 @@ package model;
 public class Board {
     protected Cell[][] board;
 
+    /**
+     * Basic constructor.
+     * Defualts all cells to start as editable and with Value zero.
+     */
     public Board(){
         this.board = new Cell[9][9];
         for (int i = 0; i <9; i++) {
@@ -18,7 +22,10 @@ public class Board {
         }
     }
 
-    // Clone constructor
+    /**
+     * Clone Constructor.
+     * @param otherBoard  board to be cloned
+     */
     public Board(Board otherBoard) {
         this.board = new Cell[9][9];
         for (int i = 0; i < 9; i++) {
@@ -28,10 +35,21 @@ public class Board {
         }
     }
 
+    /**
+     * Returns the cell in a specific coordinate
+     * @param row   row
+     * @param col   col
+     * @return  cell at row, col
+     */
     public Cell getCell(int row, int col){
         return board[row][col];
     }
 
+    /**
+     * Returns the cells inside a particular row in array format.
+     * @param row   row
+     * @return  array containing all of the cells in row
+     */
     public Cell[] getRow(int row){
         if (row >= 0 && row < 9){
             return this.board[row];
@@ -40,6 +58,11 @@ public class Board {
         }
     }
 
+    /**
+     * Returns the cells inside a particular column in array format.
+     * @param col   col
+     * @return  array containing all of the cells in col
+     */
     public Cell[] getCol(int col){
         if (col >= 0 && col < 9){
             Cell[] column = new Cell[9];

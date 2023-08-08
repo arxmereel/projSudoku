@@ -12,6 +12,8 @@
 
 package view;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +21,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import model.GameManager;
 
@@ -47,6 +51,9 @@ public class SudokuGUI extends Application {
 	private boolean noteMode; // boolean to determine if note taking mode is on or off
 	
 	private int cellStatus[][]; // determine if the cell is empty (0), uneditable (1), or filled with notes (2)
+	
+	private Media victorySound;
+	private MediaPlayer mediaPlayer;
 	
 	private GameManager game;
 	
@@ -90,6 +97,9 @@ public class SudokuGUI extends Application {
 		numberButtons = new Button[3][3];
 		newGame = new Button("New Game");
 		modeToggle = new Button("Notes: OFF");
+		
+		victorySound = new Media(new File("san_jose_strut.mp3").toURI().toString());
+		mediaPlayer = new MediaPlayer(victorySound);
 		
 		// arrange game
 		mainPane.add(boardPane, 0, 0);
@@ -369,6 +379,7 @@ public class SudokuGUI extends Application {
 		
 		if (game.isGameOver()) {
 			infoLabel.setText("You won!");
+			mediaPlayer.play();
 		}
 	}
 	

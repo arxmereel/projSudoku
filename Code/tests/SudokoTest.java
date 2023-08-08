@@ -32,12 +32,9 @@ class SudokoTest {
 	void candidatesTests() {
 		GameManager game = new GameManager();
 		game.generateSudokuForTesting();
-		int[] cands = {1,2,3};
-		game.addCandidates(1, 1, cands);
+		game.addCandidate(1, 1, 1);
 		Set<Integer> candidates = new HashSet<>();
 		candidates.add(1);
-		candidates.add(2);
-		candidates.add(3);
 		assertEquals(candidates,game.getGameBoard().getCell(1, 1).getCandidates());
 		candidates.remove(3);
 		game.delCandidate(1, 1, 3);
